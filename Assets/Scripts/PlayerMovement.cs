@@ -48,7 +48,7 @@ public class PlayerMovement : NetworkBehaviour
 
         Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 2f * Time.deltaTime);
     }
 
     private void MoveCharacter(Vector3 moveDirection)
@@ -59,6 +59,5 @@ public class PlayerMovement : NetworkBehaviour
     public void OnMove(InputValue value)
     {
         _input = value.Get<Vector2>();
-        Debug.Log(value);
     }
 }
