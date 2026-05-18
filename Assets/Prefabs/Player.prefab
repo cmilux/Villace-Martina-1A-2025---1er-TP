@@ -164,6 +164,7 @@ GameObject:
   - component: {fileID: 263285760140154803}
   - component: {fileID: 1372672717825143723}
   - component: {fileID: 5462059377328709226}
+  - component: {fileID: 96978288602921037}
   - component: {fileID: -1604346410572579342}
   - component: {fileID: 5927212718074731108}
   - component: {fileID: 1888026984794405430}
@@ -172,7 +173,7 @@ GameObject:
   - component: {fileID: 2044539782877557847}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -278,6 +279,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &96978288602921037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6635591900826370040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fc67991892ee1d4ca7c5c3d3928cd6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPickUp
+  _objCollected: 0
 --- !u!114 &-1604346410572579342
 MonoBehaviour:
   m_ObjectHideFlags: 0

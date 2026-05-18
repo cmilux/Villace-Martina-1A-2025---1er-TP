@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 3002386123938864166}
   - component: {fileID: 8949750871602147268}
   - component: {fileID: 2865078916381137817}
+  - component: {fileID: -767014115190975158}
   - component: {fileID: 9220956745521153605}
   - component: {fileID: 6278631366905567768}
   - component: {fileID: 2945813529841663867}
   m_Layer: 0
   m_Name: PickUpObj
-  m_TagString: Untagged
+  m_TagString: PickUp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -107,6 +108,19 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &-767014115190975158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1160392914306500450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51a298353ccc78f458a8eec37f77cb44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickUpObject
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!33 &9220956745521153605
 MeshFilter:
   m_ObjectHideFlags: 0
