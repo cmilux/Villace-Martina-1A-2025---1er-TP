@@ -37,13 +37,15 @@ public class SpawnManager : NetworkBehaviour
 
     void SpawnPickUpObject()
     {
-        if (_currentPickUps >= _maxPickUps) return;
+        if (_currentPickUps >= _maxPickUps) return;     //ignore if there are enough spawned objects
 
         //Cooldown to spawn pickups
         _spawnTime -= Time.deltaTime;
         if (_spawnTime > 0) return;
         _spawnTime = _spawnCooldown;
 
+
+        //instantiate pick up obj on network
         GameObject clone = Instantiate(_pickUp, GenerateSpawnPosition(), _pickUp.transform.rotation);
         NetworkObject netObj = clone.GetComponent<NetworkObject>();
         netObj.Spawn();

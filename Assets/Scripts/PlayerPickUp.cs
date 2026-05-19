@@ -32,7 +32,7 @@ public class PlayerPickUp : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         _objCollected.OnValueChanged -= OnPickUpChanged;     //desubscribe to event
-        _score.OnValueChanged -= OnScoreChanged;
+        _score.OnValueChanged -= OnScoreChanged;            //desubscribe to even
     }
 
     private void OnPickUpChanged(int previous, int current)
@@ -42,31 +42,31 @@ public class PlayerPickUp : NetworkBehaviour
 
     private void OnScoreChanged(int previous, int current)
     {
-        UpdateScoreUI(current);
+        UpdateScoreUI(current);                                 //update score ui
     }
 
     private void UpdatePickUpUI(int value)
     {
         if (_pickedUpText != null)
-            _pickedUpText.SetText($"Picked up: {value}");       //update picked up obj text from ui
+            _pickedUpText.SetText($"Picked up: {value}");       //set picked up obj text from ui
     }
 
     void UpdateScoreUI(int value)
     {
 
         if (_score != null)
-            _scoreText.SetText($"Score: {value}");
+            _scoreText.SetText($"Score: {value}");          //set score ui
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!IsOwner) return; // only owner triggers pickup
 
-        if (other.CompareTag("PickUp"))
-            AddPickedUpServerRpc();
+        if (other.CompareTag("PickUp"))                                             //if player triggers pick up
+            AddPickedUpServerRpc();                                                     //call the method
 
-        if (other.CompareTag("TriggerZone") && (_objCollected.Value >= 1))
-            DropAndScoreServerRpc(_objCollected.Value);
+        if (other.CompareTag("TriggerZone") && (_objCollected.Value >= 1))          //if player triggers zone and has more than a pick up obj
+            DropAndScoreServerRpc(_objCollected.Value);                                 //call the method
     }
 
     [ServerRpc]     //run this on server, called from client
@@ -78,7 +78,7 @@ public class PlayerPickUp : NetworkBehaviour
     [ServerRpc]
     void DropAndScoreServerRpc(int amount)
     {
-        _score.Value += amount;
-        _objCollected.Value = 0;          //rest 1 to variable
+        _score.Value += amount;             //add score points the same amount as picked up objects
+        _objCollected.Value = 0;          //reset variable
     }
 }

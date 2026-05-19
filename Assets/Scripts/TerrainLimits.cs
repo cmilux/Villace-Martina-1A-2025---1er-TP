@@ -4,7 +4,6 @@ public class TerrainLimits : MonoBehaviour
 {
     float _floorLimit = 24f;
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         //Restricts the player from leaving the terrain

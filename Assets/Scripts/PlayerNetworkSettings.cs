@@ -10,7 +10,7 @@ public class PlayerNetworkSettings : NetworkBehaviour
 
     private void Awake()
     {
-        //PlayerInput
+        //PlayerInput starts off
         _playerInput.enabled = false;
     }
 
