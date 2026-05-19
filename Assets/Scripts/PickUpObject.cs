@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PickUpObject : NetworkBehaviour
 {
-    public static event System.Action OnPickUpCollected;
+    public static event System.Action OnPickUpCollected;        //attached to spawnmanager
 
     private void OnTriggerEnter(Collider other)
     {

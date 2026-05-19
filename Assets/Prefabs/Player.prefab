@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 5462059377328709226}
   - component: {fileID: 96978288602921037}
   - component: {fileID: -1604346410572579342}
+  - component: {fileID: 1256988854271672959}
   - component: {fileID: 5927212718074731108}
   - component: {fileID: 1888026984794405430}
   - component: {fileID: 5749711213174553243}
@@ -292,8 +293,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fc67991892ee1d4ca7c5c3d3928cd6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPickUp
-  _objCollected: 0
+  ShowTopMostFoldoutHeaderGroup: 1
+  _objCollected:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  _score:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
   _pickedUpText: {fileID: 7776337669187998095}
+  _scoreText: {fileID: 412683427850655568}
 --- !u!114 &-1604346410572579342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,6 +321,18 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _playerInput: {fileID: 1888026984794405430}
   _camera: {fileID: 5082958082938101764}
+--- !u!114 &1256988854271672959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6635591900826370040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbc4af986528335439ac007264768d87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TerrainLimits
 --- !u!136 &5927212718074731108
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -541,6 +565,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b1ac0ba995bfb8f49963d72046990973, type: 3}
+--- !u!114 &412683427850655568 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3324305116501525976, guid: b1ac0ba995bfb8f49963d72046990973, type: 3}
+  m_PrefabInstance: {fileID: 3141375672806331016}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!224 &4666033787724466248 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7735351848405916352, guid: b1ac0ba995bfb8f49963d72046990973, type: 3}
