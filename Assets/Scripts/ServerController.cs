@@ -1,17 +1,20 @@
+using TMPro;
 using Unity.Netcode;
-using Unity.VisualScripting;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class ServerController : MonoBehaviour
 {
+    [Header("UI")]
+    [SerializeField] GameObject _canvas;
     [SerializeField] Button _createGame;
     [SerializeField] Button _joinGame;
-    [SerializeField] GameObject _canvasStart;
+    [SerializeField] TMP_InputField _codeIPInput;
 
     void Start()
     {
+        //listen to buttons
         _createGame.onClick.AddListener(CreateGameClicked);
         _joinGame.onClick.AddListener(JoinGameClicked);
     }
@@ -24,12 +27,27 @@ public class ServerController : MonoBehaviour
 
     void JoinGameClicked()
     {
+        //get the text fromm input text
+        string ip = _codeIPInput.text;
+
+        if (string.IsNullOrEmpty(ip))
+        {
+            Debug.LogWarning("Please enter an IP address");
+            return;
+        }
+
+        Debug.Log("Connecting to: " + ip);
+
+        //set ip to connect client player
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ip, 7777);
+
         NetworkManager.Singleton.StartClient(); //start client
-        TurnCanvasOff();
+        TurnCanvasOff();    //turn canvas off
     }
 
     void TurnCanvasOff()
     {
-        _canvasStart.SetActive(false);
+        //canvas is off
+        _canvas.SetActive(false);
     }
 }
