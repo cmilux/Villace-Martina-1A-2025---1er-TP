@@ -80,5 +80,13 @@ public class PlayerPickUp : NetworkBehaviour
     {
         _score.Value += amount;             //add score points the same amount as picked up objects
         _objCollected.Value = 0;          //reset variable
+
+        GameManager.Instance?.AddScoreRpc(amount, OwnerClientId);       //add score (gameManager)
+    }
+
+    private void Update()
+    {
+        //block all input until game is running
+        if (GameManager.Instance == null || !GameManager.Instance.IsPlaying()) return;
     }
 }

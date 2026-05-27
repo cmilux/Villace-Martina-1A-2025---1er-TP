@@ -9,17 +9,23 @@ public class SpawnManager : NetworkBehaviour
     [SerializeField] int _maxPickUps;
     [SerializeField] float _spawnTime;
     [SerializeField] float _spawnCooldown = 2f;
-    [SerializeField] float _spawnRange;
+    [SerializeField] float _spawnRange;             //area to spawn
 
     public override void OnNetworkSpawn()
     {
         if (IsServer)
-        PickUpObject.OnPickUpCollected += HandlePickUpCollected;
+        {
+            //suscribe to events
+            PickUpObject.OnPickUpCollected += HandlePickUpCollected;
+            GameManager.OnGameOver += HandleGameOver;
+        }
     }
 
     public override void OnNetworkDespawn()
     {
+        //desuscribe to events
         PickUpObject.OnPickUpCollected -= HandlePickUpCollected;
+        GameManager.OnGameOver -= HandleGameOver;
     }
 
     private void HandlePickUpCollected()
@@ -27,10 +33,32 @@ public class SpawnManager : NetworkBehaviour
         _currentPickUps--;
     }
 
+    //stops spawning after games ends
+    void HandleGameOver()
+    {
+        if (!IsServer) return;
+
+        //despawns remaining pickups
+        var pickUps = FindObjectsByType<PickUpObject>(FindObjectsSortMode.None);
+        foreach (var p in pickUps)
+        {
+            var net = p.GetComponent<NetworkObject>();
+            if (net != null && net.IsSpawned)
+            {
+                net.Despawn();
+            }
+        }
+
+        _currentPickUps = 0;
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (!IsServer || !IsSpawned) return;
+
+        //only spawns when game is running
+        if (GameManager.Instance == null || !GameManager.Instance.IsPlaying()) return;
 
         SpawnPickUpObject();
     }

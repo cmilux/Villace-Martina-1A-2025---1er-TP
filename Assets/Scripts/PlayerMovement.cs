@@ -20,6 +20,9 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (!IsOwner) return;
 
+        //block all input until game is running
+        if (GameManager.Instance == null || !GameManager.Instance.IsPlaying()) return;
+
         Vector3 moveDirection = GetCameraRelativeDirection();
 
         RotateCharacter(moveDirection);

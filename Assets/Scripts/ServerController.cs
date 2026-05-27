@@ -11,6 +11,7 @@ public class ServerController : MonoBehaviour
     [SerializeField] Button _createGame;
     [SerializeField] Button _joinGame;
     [SerializeField] TMP_InputField _codeIPInput;
+    [SerializeField] TMP_InputField _howManyPlayers;
 
     void Start()
     {
@@ -21,7 +22,23 @@ public class ServerController : MonoBehaviour
 
     void CreateGameClicked()
     {
+        int min = 1;
+        if (!string.IsNullOrEmpty(_howManyPlayers.text))        //if howManyPlayers has a value
+        {
+            if (int.TryParse(_howManyPlayers.text, out int parsed) && parsed > 0)       //convert string to int
+            {
+                min = parsed - 1;
+            }
+            else
+            {
+                Debug.LogWarning("Invalid");
+            }
+        }
+
         NetworkManager.Singleton.StartHost(); //start host
+
+        GameManager._minClients = min;
+
         TurnCanvasOff();
     }
 
@@ -36,11 +53,8 @@ public class ServerController : MonoBehaviour
             return;
         }
 
-        Debug.Log("Connecting to: " + ip);
-
         //set ip to connect client player
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ip, 7777);
-
         NetworkManager.Singleton.StartClient(); //start client
         TurnCanvasOff();    //turn canvas off
     }
