@@ -3,6 +3,7 @@ using System;
 using TMPro;
 using Unity.Netcode;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GameManager : NetworkBehaviour
 {
@@ -23,6 +24,8 @@ public class GameManager : NetworkBehaviour
     [SerializeField] TextMeshProUGUI _playerCountText;
     [SerializeField] GameObject _gameOverPanel;
     [SerializeField] TextMeshProUGUI _winnerText;
+    [SerializeField] TextMeshProUGUI _scoreboardText;
+    [SerializeField] Button _playAgain;
 
     private NetworkVariable<float> _timeRemaining = new(
         0f,
@@ -53,6 +56,11 @@ public class GameManager : NetworkBehaviour
 
             NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnected;
+        }
+
+        if (_playAgain)
+        {
+            _playAgain.onClick.AddListener(OnPlayAgainClicked);
         }
 
         RefreshUI(_state.Value);
@@ -97,14 +105,6 @@ public class GameManager : NetworkBehaviour
         _scores[NetworkManager.Singleton.LocalClientId] = 0;
         _state.Value = GameState.Playing;
     }
-
-    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    public void AddScoreRpc(int points, ulong clientId)
-    {
-        if (_scores.ContainsKey(clientId))
-            _scores[clientId] += points;
-    }
-
     private void Update()
     {
         if (!IsServer || _state.Value != GameState.Playing) return;
@@ -124,6 +124,31 @@ public class GameManager : NetworkBehaviour
         SendPersonalizedResults();
     }
 
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void AddScoreRpc(int points, ulong clientId)
+    {
+        if (!_scores.ContainsKey(clientId)) return;
+        
+        _scores[clientId] += points;
+
+        //send scoreboard to everyplayer everytime score changes
+        Scoreboard();
+    }
+
+    void Scoreboard()
+    {
+        //show score of players
+        var lines = new List<string>();
+        foreach (var kpv in _scores)
+        {
+            int playerNum = (int)kpv.Key + 1;
+            string label = $"Player {kpv.Key + 1}";
+            lines.Add($"{label}: {kpv.Value} pts");
+        }
+
+        UpdateScoreboardClientRpc(string.Join("\n", lines));
+    }
+    
     void SendPersonalizedResults()
     {
         // Find the actual winner
@@ -145,7 +170,10 @@ public class GameManager : NetworkBehaviour
             }
         }
 
-        // Send each player their own message
+        //send final scoreboard to everyone
+        Scoreboard();
+
+        //send each player their own message
         foreach (var kvp in _scores)
         {
             string message;
@@ -157,16 +185,55 @@ public class GameManager : NetworkBehaviour
             else
                 message = $"You lost!\nWinner scored: {topScore}";
 
-            // Target this RPC to one specific client
+            //target this RPC to one specific client
             ShowWinnerRpc(message, RpcTarget.Single(kvp.Key, RpcTargetUse.Temp));
         }
     }
 
+    void OnPlayAgainClicked()
+    {
+        //any player can request but host decides
+        RequestRestartRpc();
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    void RequestRestartRpc()
+    {
+        if (_state.Value != GameState.GameOver) return;
+
+        //reset score for all connected players
+        foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+            _scores[clientId] = 0;
+
+        //send empty scoreboard and restart time before going to waiting room
+        Scoreboard();
+        _timeRemaining.Value = _gameDuration;
+
+        //check if enough players are connected
+        int connectedClients = NetworkManager.Singleton.ConnectedClientsIds.Count - 1;
+        if (connectedClients >= _minClients)
+        {
+            StartGame();
+        }
+        else
+        {
+            _state.Value = GameState.WaitingForPlayer;
+        }
+    }
+
+
+    //Rpc to clients--------------------
     [Rpc(SendTo.SpecifiedInParams)]
     void ShowWinnerRpc(string message, RpcParams rpcParams = default)
     {
         if (_winnerText) _winnerText.text = message;
         if (_gameOverPanel) _gameOverPanel.SetActive(true);
+    }
+
+    [ClientRpc]
+    void UpdateScoreboardClientRpc(string scoreboard)
+    {
+        if (_scoreboardText) _scoreboardText.text = scoreboard;
     }
 
     [ClientRpc]
@@ -176,7 +243,7 @@ public class GameManager : NetworkBehaviour
             _playerCountText.text = $"{connected}/{required} player connected";
     }
 
-
+    //State -> UI------------------------
     void OnStateChanged(GameState previous, GameState current)
     {
         RefreshUI(current);

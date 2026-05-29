@@ -27,12 +27,15 @@ public class PlayerPickUp : NetworkBehaviour
         _score.OnValueChanged += OnScoreChanged;            //subscribe to event
         UpdatePickUpUI(_objCollected.Value);                //update ui w the value of a pickup
         UpdateScoreUI(_score.Value);                        //update ui w the score
+        GameManager.OnGameStarted += ResetStats;            //reset own variables when a new game starts
     }
 
     public override void OnNetworkDespawn()
     {
-        _objCollected.OnValueChanged -= OnPickUpChanged;     //desubscribe to event
-        _score.OnValueChanged -= OnScoreChanged;            //desubscribe to even
+        //desuscribe to events
+        _objCollected.OnValueChanged -= OnPickUpChanged;
+        _score.OnValueChanged -= OnScoreChanged;            
+        GameManager.OnGameStarted -= ResetStats;
     }
 
     private void OnPickUpChanged(int previous, int current)
@@ -43,6 +46,18 @@ public class PlayerPickUp : NetworkBehaviour
     private void OnScoreChanged(int previous, int current)
     {
         UpdateScoreUI(current);                                 //update score ui
+    }
+
+    void ResetStats()
+    {
+        if (IsOwner) ResetStatsServerRpc();
+    }
+
+    [ServerRpc]
+    void ResetStatsServerRpc()
+    {
+        _score.Value = 0;
+        _objCollected.Value = 0;
     }
 
     private void UpdatePickUpUI(int value)
