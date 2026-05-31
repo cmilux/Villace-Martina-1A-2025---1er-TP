@@ -1,8 +1,13 @@
+using System.Collections;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.UI;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class ServerController : MonoBehaviour
 {
@@ -10,14 +15,17 @@ public class ServerController : MonoBehaviour
     [SerializeField] GameObject _canvas;
     [SerializeField] Button _createGame;
     [SerializeField] Button _joinGame;
-    [SerializeField] TMP_InputField _codeIPInput;
     [SerializeField] TMP_InputField _howManyPlayers;
+    [SerializeField] TMP_InputField _codeIPInput;
+    [SerializeField] GameObject _waitingPanel;
+    [SerializeField] Button _exitGame;
 
     void Start()
     {
         //listen to buttons
         _createGame.onClick.AddListener(CreateGameClicked);
         _joinGame.onClick.AddListener(JoinGameClicked);
+        _exitGame.onClick.AddListener(Exit);
     }
 
     void CreateGameClicked()
@@ -53,15 +61,53 @@ public class ServerController : MonoBehaviour
             return;
         }
 
+        if (NetworkManager.Singleton.IsListening)
+        {
+            NetworkManager.Singleton.Shutdown();
+        }
+
         //set ip to connect client player
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ip, 7777);
+
+        NetworkManager.Singleton.OnTransportFailure += TransportFail;
+
         NetworkManager.Singleton.StartClient(); //start client
         TurnCanvasOff();    //turn canvas off
+    }
+
+    void TransportFail()
+    {
+        NetworkManager.Singleton.OnTransportFailure -= TransportFail;
+
+        NetworkManager.Singleton.Shutdown();
+
+        StartCoroutine(ResetUI());
+    }
+
+    IEnumerator ResetUI()
+    {
+        yield return null;
+
+        if(_waitingPanel) _waitingPanel.SetActive(false);
+        _canvas.SetActive(true);
+        _codeIPInput.text = "";
     }
 
     void TurnCanvasOff()
     {
         //canvas is off
         _canvas.SetActive(false);
+    }
+
+    void Exit()
+    {
+        NetworkManager.Singleton.Shutdown();
+
+        //exit the game inside of unity or if it's a build, exit the build
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
+            Application.Quit();
+#endif
     }
 }
