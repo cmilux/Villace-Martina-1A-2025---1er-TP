@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Netcode;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections;
 
 public class GameManager : NetworkBehaviour
 {
@@ -26,6 +27,7 @@ public class GameManager : NetworkBehaviour
     [SerializeField] TextMeshProUGUI _winnerText;
     [SerializeField] TextMeshProUGUI _scoreboardText;
     [SerializeField] Button _playAgain;
+    [SerializeField] Button _backToMenu;
 
     private NetworkVariable<float> _timeRemaining = new(
         0f,
@@ -61,6 +63,11 @@ public class GameManager : NetworkBehaviour
         if (_playAgain)
         {
             _playAgain.onClick.AddListener(OnPlayAgainClicked);
+        }
+
+        if (_backToMenu)
+        {
+            _backToMenu.onClick.AddListener(OnBackToMenuClicked);
         }
 
         RefreshUI(_state.Value);
@@ -105,6 +112,7 @@ public class GameManager : NetworkBehaviour
         _scores[NetworkManager.Singleton.LocalClientId] = 0;
         _state.Value = GameState.Playing;
     }
+
     private void Update()
     {
         if (!IsServer || _state.Value != GameState.Playing) return;
@@ -128,7 +136,7 @@ public class GameManager : NetworkBehaviour
     public void AddScoreRpc(int points, ulong clientId)
     {
         if (!_scores.ContainsKey(clientId)) return;
-        
+
         _scores[clientId] += points;
 
         //send scoreboard to everyplayer everytime score changes
@@ -148,7 +156,7 @@ public class GameManager : NetworkBehaviour
 
         UpdateScoreboardClientRpc(string.Join("\n", lines));
     }
-    
+
     void SendPersonalizedResults()
     {
         // Find the actual winner
@@ -221,6 +229,23 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    void OnBackToMenuClicked()
+    {
+        NetworkManager.Singleton.Shutdown();
+        StartCoroutine(BackToMenu());
+    }
+
+    IEnumerator BackToMenu()
+    {
+        yield return null; //wait one frame
+
+        if (_waitingPanel) _waitingPanel.SetActive(false);
+        if (_gameOverPanel) _gameOverPanel.SetActive(false);
+        if (_timerText) _timerText.gameObject.SetActive(false);
+        if (_scoreboardText) _scoreboardText.gameObject.SetActive(false);
+
+        ServerController.Instance.ShowCanvas();
+    }
 
     //Rpc to clients--------------------
     [Rpc(SendTo.SpecifiedInParams)]

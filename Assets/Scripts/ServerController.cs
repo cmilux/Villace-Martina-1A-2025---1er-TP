@@ -11,6 +11,8 @@ using UnityEditor;
 
 public class ServerController : MonoBehaviour
 {
+    public static ServerController Instance { get; private set; }
+
     [Header("UI")]
     [SerializeField] GameObject _canvas;
     [SerializeField] Button _createGame;
@@ -20,12 +22,21 @@ public class ServerController : MonoBehaviour
     [SerializeField] GameObject _waitingPanel;
     [SerializeField] Button _exitGame;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
     {
         //listen to buttons
         _createGame.onClick.AddListener(CreateGameClicked);
         _joinGame.onClick.AddListener(JoinGameClicked);
         _exitGame.onClick.AddListener(Exit);
+
+        //clean input spaces
+        _howManyPlayers.text = "";
+        _codeIPInput.text = "";
     }
 
     void CreateGameClicked()
@@ -90,8 +101,9 @@ public class ServerController : MonoBehaviour
 
         if(_waitingPanel) _waitingPanel.SetActive(false);
         _canvas.SetActive(true);
-        _codeIPInput.text = "";
     }
+
+    public void ShowCanvas() => _canvas.SetActive(true);
 
     void TurnCanvasOff()
     {
