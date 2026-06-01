@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 1372672717825143723}
   - component: {fileID: 5462059377328709226}
   - component: {fileID: 96978288602921037}
+  - component: {fileID: 1391064688206869628}
   - component: {fileID: -1604346410572579342}
   - component: {fileID: 1256988854271672959}
   - component: {fileID: 5927212718074731108}
@@ -172,7 +173,6 @@ GameObject:
   - component: {fileID: 5749711213174553243}
   - component: {fileID: 5315265643036076054}
   - component: {fileID: 2044539782877557847}
-  - component: {fileID: 1391064688206869628}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -307,6 +307,25 @@ MonoBehaviour:
     m_InternalValue: 0
   _pickedUpText: {fileID: 7776337669187998095}
   _scoreText: {fileID: 412683427850655568}
+--- !u!114 &1391064688206869628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6635591900826370040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24a1712cda60a3446a93afd6b75e095b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerColor
+  ShowTopMostFoldoutHeaderGroup: 1
+  _renderer: {fileID: 5315265643036076054}
+  _playerColors:
+  - {r: 0.8980392, g: 0.5176471, b: 0, a: 1}
+  - {r: 0.6415094, g: 0, b: 0, a: 1}
+  - {r: 0.8396226, g: 0.80449367, b: 0, a: 1}
+  - {r: 0, g: 0, b: 0.6792453, a: 1}
 --- !u!114 &-1604346410572579342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,25 +488,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1391064688206869628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6635591900826370040}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24a1712cda60a3446a93afd6b75e095b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerColor
-  ShowTopMostFoldoutHeaderGroup: 1
-  _renderer: {fileID: 5315265643036076054}
-  _playerColors:
-  - {r: 0.8980392, g: 0.5176471, b: 0, a: 1}
-  - {r: 0.6415094, g: 0, b: 0, a: 1}
-  - {r: 0.8396226, g: 0.80449367, b: 0, a: 1}
-  - {r: 0, g: 0, b: 0.6792453, a: 1}
 --- !u!1001 &3141375672806331016
 PrefabInstance:
   m_ObjectHideFlags: 0

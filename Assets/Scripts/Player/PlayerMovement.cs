@@ -9,13 +9,11 @@ public class PlayerMovement : NetworkBehaviour
     Vector2 _input;
     float _speed = 10f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
     }
 
-    // Update is called once per frame
     private void Update()
     {
         if (!IsOwner) return;

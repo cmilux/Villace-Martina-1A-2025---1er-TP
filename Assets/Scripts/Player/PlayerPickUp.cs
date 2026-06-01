@@ -5,18 +5,20 @@ using UnityEngine;
 
 public class PlayerPickUp : NetworkBehaviour
 {
+    //net variable to check how many obj were collected
     [SerializeField] NetworkVariable <int> _objCollected = new NetworkVariable<int>(
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
 
+    //net variable to check score
     [SerializeField] NetworkVariable <int> _score = new NetworkVariable<int>(
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
 
-    [SerializeField] TextMeshProUGUI _pickedUpText;
-    [SerializeField] TextMeshProUGUI _scoreText;
+    [SerializeField] TextMeshProUGUI _pickedUpText;     //how many obj picked up
+    [SerializeField] TextMeshProUGUI _scoreText;        //player score
 
     public override void OnNetworkSpawn()
     {
@@ -56,6 +58,7 @@ public class PlayerPickUp : NetworkBehaviour
     [ServerRpc]
     void ResetStatsServerRpc()
     {
+        //reset values
         _score.Value = 0;
         _objCollected.Value = 0;
     }

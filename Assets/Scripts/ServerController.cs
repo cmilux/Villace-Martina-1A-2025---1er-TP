@@ -4,6 +4,8 @@ using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.VisualScripting;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -33,30 +35,23 @@ public class ServerController : MonoBehaviour
         _createGame.onClick.AddListener(CreateGameClicked);
         _joinGame.onClick.AddListener(JoinGameClicked);
         _exitGame.onClick.AddListener(Exit);
-
-        //clean input spaces
-        _howManyPlayers.text = "";
-        _codeIPInput.text = "";
     }
 
     void CreateGameClicked()
     {
-        int min = 1;
-        if (!string.IsNullOrEmpty(_howManyPlayers.text))        //if howManyPlayers has a value
+        int min = 1;        //by default 2 players (1 cause is one client)
+
+        if (!string.IsNullOrEmpty(_howManyPlayers.text))        //checks if input field has something typed
         {
-            if (int.TryParse(_howManyPlayers.text, out int parsed) && parsed > 0)       //convert string to int
+            if (int.TryParse(_howManyPlayers.text, out int parsed) && parsed > 0)       //convert string to int (has to be bigger than 0)
             {
+                //if host types 2, subtracts 1 because host is alredy in it
                 min = parsed - 1;
-            }
-            else
-            {
-                Debug.LogWarning("Invalid");
             }
         }
 
-        NetworkManager.Singleton.StartHost(); //start host
-
-        GameManager._minClients = min;
+        NetworkManager.Singleton.StartHost();   //start host
+        GameManager._minClients = min;          //send the value to game manager so the game starts
 
         TurnCanvasOff();
     }
@@ -66,44 +61,41 @@ public class ServerController : MonoBehaviour
         //get the text fromm input text
         string ip = _codeIPInput.text;
 
-        if (string.IsNullOrEmpty(ip))
-        {
-            Debug.LogWarning("Please enter an IP address");
-            return;
-        }
-
+        //if a previous connection attempt is still active
         if (NetworkManager.Singleton.IsListening)
         {
+            //shut it down before trying again
             NetworkManager.Singleton.Shutdown();
         }
 
         //set ip to connect client player
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ip, 7777);
-
-        NetworkManager.Singleton.OnTransportFailure += TransportFail;
-
+        NetworkManager.Singleton.OnTransportFailure += TransportFail;       //if client didnt connect correctly goes here
         NetworkManager.Singleton.StartClient(); //start client
+
         TurnCanvasOff();    //turn canvas off
     }
 
     void TransportFail()
     {
-        NetworkManager.Singleton.OnTransportFailure -= TransportFail;
+        NetworkManager.Singleton.OnTransportFailure -= TransportFail;   //desuscribes
+        NetworkManager.Singleton.Shutdown();        //shuts network down
 
-        NetworkManager.Singleton.Shutdown();
-
-        StartCoroutine(ResetUI());
+        StartCoroutine(ResetUI());      //resets ui
     }
 
     IEnumerator ResetUI()
     {
-        yield return null;
+        yield return null;  //waits one frama
 
-        if(_waitingPanel) _waitingPanel.SetActive(false);
-        _canvas.SetActive(true);
+        if (_waitingPanel) _waitingPanel.SetActive(false);      //forces to waiting panel to turn off
+        TurnCanvasOn();
     }
 
-    public void ShowCanvas() => _canvas.SetActive(true);
+    public void TurnCanvasOn()
+    {
+        _canvas.SetActive(true);
+    }
 
     void TurnCanvasOff()
     {
@@ -113,6 +105,7 @@ public class ServerController : MonoBehaviour
 
     void Exit()
     {
+        //shut network down
         NetworkManager.Singleton.Shutdown();
 
         //exit the game inside of unity or if it's a build, exit the build
