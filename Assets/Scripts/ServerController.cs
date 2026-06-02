@@ -21,6 +21,7 @@ public class ServerController : MonoBehaviour
     [SerializeField] Button _joinGame;
     [SerializeField] TMP_InputField _howManyPlayers;
     [SerializeField] TMP_InputField _codeIPInput;
+    [SerializeField] TextMeshProUGUI _tryAgainIP;
     [SerializeField] GameObject _waitingPanel;
     [SerializeField] Button _exitGame;
 
@@ -82,6 +83,7 @@ public class ServerController : MonoBehaviour
         NetworkManager.Singleton.Shutdown();        //shuts network down
 
         StartCoroutine(ResetUI());      //resets ui
+        _tryAgainIP.gameObject.SetActive(true);
     }
 
     IEnumerator ResetUI()
@@ -90,6 +92,7 @@ public class ServerController : MonoBehaviour
 
         if (_waitingPanel) _waitingPanel.SetActive(false);      //forces to waiting panel to turn off
         TurnCanvasOn();
+
     }
 
     public void TurnCanvasOn()
