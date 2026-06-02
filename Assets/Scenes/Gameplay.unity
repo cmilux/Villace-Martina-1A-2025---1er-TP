@@ -4705,9 +4705,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _pickUp: {fileID: 1160392914306500450, guid: c04a243a10c80464eb5169700ed8ad8f, type: 3}
   _currentPickUps: 0
-  _maxPickUps: 20
+  _maxPickUps: 25
   _spawnTime: 0
-  _spawnCooldown: 2
+  _spawnCooldown: 1
   _spawnRange: 23
 --- !u!4 &1655976296
 Transform:
