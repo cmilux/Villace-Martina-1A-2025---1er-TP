@@ -341,6 +341,11 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _playerInput: {fileID: 1888026984794405430}
   _camera: {fileID: 5082958082938101764}
+  _spawnPoints:
+  - {fileID: 8012179765418426117, guid: d1f13368885527d4eb1bdf4f8686bce1, type: 3}
+  - {fileID: 8905510226919983640, guid: 0a182c2c670cfaa498b37c70b26d8ea9, type: 3}
+  - {fileID: 7046995306327005666, guid: d452e15cded53d443be17613a5a7afad, type: 3}
+  - {fileID: 4918565669802625671, guid: 6245811814482b1429a89e2e96027a45, type: 3}
 --- !u!114 &1256988854271672959
 MonoBehaviour:
   m_ObjectHideFlags: 0
