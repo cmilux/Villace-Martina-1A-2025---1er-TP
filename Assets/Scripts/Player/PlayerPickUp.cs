@@ -2,6 +2,7 @@ using TMPro;
 using Unity.Netcode;
 using System;
 using UnityEngine;
+using System.Collections;
 
 public class PlayerPickUp : NetworkBehaviour
 {
@@ -100,6 +101,23 @@ public class PlayerPickUp : NetworkBehaviour
         _objCollected.Value = 0;          //reset variable
 
         GameManager.Instance?.AddScoreRpc(amount, OwnerClientId);       //add score (gameManager)
+
+        LightsClientRpc();
+    }
+
+    [ClientRpc]
+    void LightsClientRpc()
+    {
+        TriggerZone.Instance?.TurnLightsOn();
+
+        StartCoroutine(TurnLightsOff());
+    }
+
+    IEnumerator TurnLightsOff()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        TriggerZone.Instance.TurnLightsOff();
     }
 
     private void Update()
