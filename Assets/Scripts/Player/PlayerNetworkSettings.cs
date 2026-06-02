@@ -20,8 +20,10 @@ public class PlayerNetworkSettings : NetworkBehaviour
         _playerInput.enabled = IsOwner;
         _camera.SetActive(IsOwner);
 
+        //server moves each player to their spawn point based on their ID
         if (IsServer && _spawnPoints.Length > 0)
         {
+            //use clientId to pick a spawn point, loops back if more players than points
             int index = (int)(OwnerClientId % (ulong)_spawnPoints.Length);
             transform.position = _spawnPoints[index].position;
         }
